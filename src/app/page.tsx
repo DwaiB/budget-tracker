@@ -1,4 +1,7 @@
 import Image from "next/image";
+import GoogleSignInButton from "./client/googleSignIn";
+import CreateSheetButton from "./client/createSheet";
+import SaveTransactionButton from "./client/writeSheet";
 
 export default function Home() {
   return (
@@ -59,6 +62,9 @@ export default function Home() {
             Documentation
           </a>
         </div>
+        <GoogleSignInButton />
+        <CreateSheetButton />
+        <SaveTransactionButton />
       </main>
     </div>
   );
