@@ -1,25 +1,23 @@
 "use client";
 
 export default function CreateSheetButton() {
-  async function createSheet() {
-    const res = await fetch("/api/sheets/create", {
+  async function createGoogleSheet() {
+
+    const response = await fetch("/api/sheets/page/create", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+      }),
     });
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("API error:", text);
-      alert("Failed to create sheet");
-      return;
-    }
 
-    const data = await res.json();
+    const data = await response.json();
+    const spreadsheetId = data.spreadsheetId || "";
 
-    localStorage.setItem("spreadsheetId", data.spreadsheetId);
-    // window.open(data.spreadsheetUrl, "_blank");
+    localStorage.setItem("spreadsheetId", spreadsheetId);
   }
 
   return (
-    <button onClick={createSheet}>
+    <button onClick={createGoogleSheet}>
       Create Google Sheet
     </button>
   );

@@ -1,10 +1,17 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function SaveBudgetButton() {
   const { data: session, status } = useSession();
-  const spreadsheetId = localStorage.getItem("spreadsheetId");
+  const [spreadsheetId, setSpreadsheetId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const id = localStorage.getItem("spreadsheetId");
+    setSpreadsheetId(id);
+  }, []);
+  
 
   if (status === "loading") return <p>Loading...</p>;
   if (!session) return <p>Please sign in</p>;

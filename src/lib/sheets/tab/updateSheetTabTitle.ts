@@ -1,7 +1,7 @@
 import { findSheetId } from "./findSheetTabId";
 import { getAllSheets } from "../getAllSheets";
 
-export async function updateSheetTitle(
+export async function updateSheetTabTitle(
   spreadsheetId: string,
   old_title: string,
   new_title: string

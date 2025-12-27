@@ -1,0 +1,152 @@
+The cleanest, production-grade way to add Light / Dark theme for the entire Next.js App Router app is to use next-themes.
+
+This gives you:
+
+🌗 System / Light / Dark modes
+
+💾 Theme persistence (localStorage)
+
+🚫 No hydration mismatch
+
+✅ Works perfectly with Tailwind
+
+✅ Step-by-Step (App Router)
+1️⃣ Install dependency
+npm install next-themes
+
+2️⃣ Enable dark mode in Tailwind
+
+tailwind.config.js
+
+module.exports = {
+  darkMode: "class",
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+
+3️⃣ Create Theme Provider (VERY IMPORTANT)
+
+app/providers.tsx
+
+"use client";
+
+import { ThemeProvider } from "next-themes";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      {children}
+    </ThemeProvider>
+  );
+}
+
+4️⃣ Wrap the Entire App
+
+app/layout.tsx
+
+import "./globals.css";
+import { Providers } from "./providers";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className="bg-white text-black dark:bg-black dark:text-white transition-colors">
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+
+
+🔑 suppressHydrationWarning prevents mismatch on first render.
+
+5️⃣ Theme Toggle Button (Material-style)
+
+ThemeToggle.tsx
+
+"use client";
+
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+
+export default function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
+  return (
+    <button
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="rounded-lg px-3 py-2 text-sm
+                 bg-zinc-100 dark:bg-zinc-800
+                 text-zinc-800 dark:text-zinc-200
+                 hover:bg-zinc-200 dark:hover:bg-zinc-700
+                 transition"
+    >
+      {theme === "dark" ? "☀ Light" : "🌙 Dark"}
+    </button>
+  );
+}
+
+6️⃣ Use It in Navbar
+import ThemeToggle from "@/components/ThemeToggle";
+
+<div className="flex items-center gap-3">
+  <ThemeToggle />
+  <GoogleSignInButton />
+</div>
+
+🧠 How It Works (Simple)
+
+next-themes adds class="dark" to <html>
+
+Tailwind’s dark: styles automatically apply
+
+Theme choice is stored in localStorage
+
+System theme respected by default
+
+🎨 Example Global Styles
+body {
+  @apply bg-white text-zinc-900 dark:bg-black dark:text-zinc-100;
+}
+
+✅ Result
+
+🌞 Light mode
+
+🌚 Dark mode
+
+🔁 System mode
+
+⚡ No flicker
+
+🧼 Clean Material feel
+
+🔥 Want more?
+
+I can add:
+
+🎚 System / Light / Dark selector
+
+🎨 Custom color palette
+
+💾 Server-side theme detection
+
+📱 Mobile-friendly toggle
+
+Just say the word 👌

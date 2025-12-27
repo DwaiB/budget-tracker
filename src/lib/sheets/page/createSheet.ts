@@ -1,22 +1,26 @@
+import { NextResponse } from "next/server";
 import { getAllSheets } from "../getAllSheets";
+import { CreateSheetResponse } from "@/models/sheet/createSheet";
+import { SHEET_TABS } from "@/constants/app_constants";
+import { updateSheetTabTitle } from "../tab/updateSheetTabTitle";
+import { InitializeBudgetSheet } from "../initBudgetSheet";
 
-export async function createSheetTab(
-  spreadsheetId: string,
-  title: string
-): Promise<void> {
+export async function createSheet(
+): Promise<CreateSheetResponse> {
   const sheets = await getAllSheets();
-  await sheets.spreadsheets.batchUpdate({
-    spreadsheetId,
-    requestBody: {
-      requests: [
-        {
-          addSheet: {
-            properties: {
-              title: title,
-            },
-          },
+  const response = await sheets.spreadsheets.create({
+      requestBody: {
+        properties: {
+          title: "My Budget Sheet",
         },
-      ],
-    },
-  });
+      },
+    });
+
+  InitializeBudgetSheet(response.data.spreadsheetId || "");
+
+  const data =  response.data || { spreadsheetId: "", spreadsheetUrl: "" };
+  return {
+      spreadsheetId: data.spreadsheetId,
+      spreadsheetUrl: data.spreadsheetUrl,
+    };
 }
