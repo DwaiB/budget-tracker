@@ -18,8 +18,8 @@ export const DATE_FORMAT = "MM/DD/YYYY";
 
 export const SHEET_RANGES = {
   BUDGET_PLANNING: {
-    HEADER_ROW: "A1:Z1",
-    DATA_RANGE: "A:Z",
+    HEADER_ROW: "A1:C1",
+    DATA_RANGE: "A:C",
   },
   BUDGET_TRACKING: {
     HEADER_ROW: "A1:Z1",

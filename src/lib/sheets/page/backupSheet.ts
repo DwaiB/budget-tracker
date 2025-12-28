@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { google } from "googleapis";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import { APP_CONSTANTS } from "@/constants/app_constants";
+import { APP_CONSTANTS } from "@/lib/constants/app_constants";
 
 export async function createBackupSheet(
   spreadsheetId: string,

@@ -3,11 +3,12 @@
 import Navbar from "@/components/ui/Navbar";
 import TransactionModal from "@/components/ui/Plan_Modal";
 import SheetTable from "@/components/ui/SheetTable";
+import { SHEET_RANGES, SHEET_TABS } from "@/lib/constants/app_constants";
 import { useEffect, useState } from "react";
 
 export default function SheetPage() {
   const [spreadsheetId, setSpreadsheetId] = useState<string | null>(null);
-  const [sheetData, setSheetData] = useState<any[][]>([]);
+  const [sheetData, setSheetData] = useState<string[][]>([[],[],[]]);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -21,7 +22,10 @@ export default function SheetPage() {
     const response = await fetch("/api/sheets/page/read", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ string: spreadsheetId }),
+      body: JSON.stringify({ 
+        spreadsheetId: spreadsheetId, 
+        range: `${SHEET_TABS.BUDGET_PLANNING}!${SHEET_RANGES.BUDGET_PLANNING.DATA_RANGE}` 
+      }),
     });
 
     const data = await response.json();
@@ -48,7 +52,7 @@ export default function SheetPage() {
         + Add Transaction
       </button>
 
-      <TransactionModal open={open} onClose={() => setOpen(false)} />
+      <TransactionModal open={open} onClose={() => setOpen(false)} data={sheetData} setData={setSheetData} />
     </div>
     </>
   );

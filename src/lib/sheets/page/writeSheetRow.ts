@@ -1,10 +1,10 @@
 import { getAllSheets } from "../getAllSheets";
-import { SHEET_TABS, SHEET_RANGES } from "@/constants/app_constants";
+import { SHEET_TABS, SHEET_RANGES } from "@/lib/constants/app_constants";
 
 
 export async function writeSheetRow(
   spreadsheetId: string,
-  sheetName: typeof SHEET_TABS[keyof typeof SHEET_TABS],
+  sheetName: string,
   sheetRange: string,
   values: any[][]
 ): Promise<void> {
@@ -14,7 +14,7 @@ export async function writeSheetRow(
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: `${sheetName}!${sheetRange}`,
+      range: `${sheetName}`,
       valueInputOption: "USER_ENTERED",
       insertDataOption: "INSERT_ROWS",
       requestBody: {

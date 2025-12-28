@@ -1,20 +1,59 @@
 "use client";
 
 import { CashMovementTypes } from "@/models/common/money_movement.enums";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 
 interface Props {
   open: boolean;
+  data: string[][];
+  setData: (data: string[][]) => void;
   onClose: () => void;
 }
 
-export default function TransactionModal({ open, onClose }: Props) {
+export default function TransactionModal({
+  open,
+  onClose,
+  data,
+  setData,
+}: Props) {
   const [type, setType] = useState("");
   const [category, setCategory] = useState("");
-  const [movement, setMovement] = useState<CashMovementTypes>(CashMovementTypes.DEBIT);
+  const [movement, setMovement] = useState<CashMovementTypes>(
+    CashMovementTypes.DEBIT
+  );
+
+  useEffect(() => {
+    if (open) {
+      setType(data[0]?.[0] ?? "");
+      setCategory(data[1]?.[0] ?? "");
+    }
+  }, [open, data]);
 
   if (!open) return null;
+
+  const handleOk = () => {
+    const newData: string[][] = [
+      data[0] ? [...data[0]] : [],
+      data[1] ? [...data[1]] : [],
+      data[2] ? [...data[2]] : [],
+    ];
+
+    if (type && !newData[0].includes(type)) {
+      newData[0].push(type);
+    }
+
+    if (category && !newData[1].includes(category)) {
+      newData[1].push(category);
+    }
+
+    if (movement && !newData[2].includes(movement)) {
+      newData[2].push(movement);
+    }
+
+    setData(newData);
+    onClose();
+  };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
@@ -25,22 +64,34 @@ export default function TransactionModal({ open, onClose }: Props) {
         <div className="mb-4">
           <label className="block text-sm text-gray-600 mb-1">Type</label>
           <input
+            list="types"
             value={type}
             onChange={(e) => setType(e.target.value)}
-            placeholder="e.g. Food"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            placeholder="Select or enter type"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
           />
+          <datalist id="types">
+            {data[0]?.map((t) => (
+              <option key={t} value={t} />
+            ))}
+          </datalist>
         </div>
 
         {/* CATEGORY */}
         <div className="mb-4">
           <label className="block text-sm text-gray-600 mb-1">Category</label>
           <input
+            list="categories"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            placeholder="e.g. Lunch"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            placeholder="Select or enter category"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
           />
+          <datalist id="categories">
+            {data[1]?.map((c) => (
+              <option key={c} value={c} />
+            ))}
+          </datalist>
         </div>
 
         {/* MOVEMENT */}
@@ -49,7 +100,7 @@ export default function TransactionModal({ open, onClose }: Props) {
           <select
             value={movement}
             onChange={(e) => setMovement(e.target.value as CashMovementTypes)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-white focus:ring-1 focus:ring-blue-500"
           >
             <option value={CashMovementTypes.DEBIT}>Debit</option>
             <option value={CashMovementTypes.CREDIT}>Credit</option>
@@ -67,7 +118,7 @@ export default function TransactionModal({ open, onClose }: Props) {
           </button>
 
           <button
-            onClick={onClose}
+            onClick={handleOk}
             className="px-4 py-2 rounded-lg bg-blue-600 text-white shadow hover:bg-blue-700 active:scale-95 transition"
           >
             OK

@@ -1,10 +1,10 @@
-import { SHEET_TABS, SHEET_RANGES } from "@/constants/app_constants";
+import { SHEET_TABS, SHEET_RANGES } from "@/lib/constants/app_constants";
 import { writeSheetRow } from "./writeSheetRow";
 
 export async function writeSheet(
   spreadsheetId: string,
   sheetName: typeof SHEET_TABS[keyof typeof SHEET_TABS],
-  values: any[][]
+  values: string[][]
 ): Promise<void> {
   try {
     const range = SHEET_RANGES[sheetName as keyof typeof SHEET_RANGES]?.DATA_RANGE;

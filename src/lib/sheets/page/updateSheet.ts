@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { google } from "googleapis";
-import { SHEET_TABS } from "@/constants/app_constants";
+import { SHEET_TABS } from "@/lib/constants/app_constants";
 
-export async function writeSheet(
+export async function updateSheet(
   spreadsheetId: string,
   sheetName: typeof SHEET_TABS[keyof typeof SHEET_TABS],
   range: string,

@@ -4,4 +4,5 @@ export interface BudgetConfig {
   starting_year: number;  
   date_of_last_record: string;
   total_record: number;
+  total_records_in_current_year: number;
 }
